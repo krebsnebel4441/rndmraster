@@ -9,10 +9,10 @@
 float edgefunc(int vertex[2], int corner[2], float pixel[2]);
 
 // The precalculated relative position of the surrounding points of the triangle on the screen
-const float vertices[3][2] = {
-	{0.25, 0.25},
-	{0.50, 0.75},
-	{0.75, 0.25},
+const float vertices[3][5] = {
+	{0.25, 0.25, 1.0, 0.0, 0.0},
+	{0.50, 0.75, 0.0, 1.0, 0.0},
+	{0.75, 0.25, 0.0, 0.0, 1.0},
 };
 
 int main(int argc, char * argv[]) {
@@ -57,7 +57,19 @@ int main(int argc, char * argv[]) {
 			// Combining all determinants it is checked whether all determinants are
 			// greater or equal than 0. If so the color is set to red
 			if (det0 >= 0.0 && det1 >= 0.0 && det2 >= 0.0) {
-				fb[y * imagewidth + x] = 0x00ff0000;
+				float v2[2];
+				v2[0] = verts[2][0]; v2[1] = verts[2][1];
+				float area = edgefunc(verts[0], verts[1], v2);
+				float l0 = det1 / area;
+				float l1 = det2 / area;
+				float l2 = det0 / area;
+				float rb = (l0 * vertices[0][2] + l1 * vertices[1][2] + l2 * vertices[2][2]);
+				float gb = (l0 * vertices[0][3] + l1 * vertices[1][3] + l2 * vertices[2][3]);
+				float bb = (l0 * vertices[0][4] + l1 * vertices[1][4] + l2 * vertices[2][4]);
+				int r = ((int) (rb * 255.0)) << 16;
+				int g = ((int) (gb * 255.0)) << 8;
+				int b = ((int) (bb * 255.0));
+				fb[y * imagewidth + x] = r + g + b;
 			}
 		}
 	}
