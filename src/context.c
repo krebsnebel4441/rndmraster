@@ -18,6 +18,8 @@ static void draw_ppm(struct context * context) {
 
 struct ppm_context init_ppm(int width, int height, char * filename) {
 	uint32_t * buffer = malloc(sizeof(uint32_t) * width * height);
+	float * zbuffer = malloc(sizeof(float) * width * height);
+	memset(zbuffer, 0xfe, sizeof(float) * width * height);
 	memset(buffer, 0x0, sizeof(uint32_t) * width * height);
 	FILE * dest = fopen(filename, "w");
 	struct ppm_context context = {
@@ -25,6 +27,7 @@ struct ppm_context init_ppm(int width, int height, char * filename) {
 		.imageheight = height,
 		.draw = &draw_ppm,
 		.buffer = buffer,
+		.zbuf = zbuffer,
 		.file = dest,
 	};
 	return context;

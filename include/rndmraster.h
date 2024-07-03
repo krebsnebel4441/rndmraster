@@ -7,6 +7,7 @@
 #define CONTEXT_FIELDS	\
 	int imagewidth, imageheight;	\
 	uint32_t * buffer;		\
+	float * zbuf;			\
 	void (*draw)(struct context *);	\
 
 struct context {
